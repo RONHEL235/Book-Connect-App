@@ -10,8 +10,6 @@ let page = 1
 // Checking if the books exist and if they're in an array format. If not, it's going to yell at you (throw an error).
 if (!books || !Array.isArray(books)) throw new Error('Source required')
 
-
-
 // Defining two color themes for the website: 'day' and 'night'.
 const day = {
     dark: '10, 10, 20',
@@ -28,22 +26,6 @@ const night = {
 
 const css = { day, night }  // Grouping both themes in one object.
 
-const actions = {
-    list: {
-        // This function updates the text on a button to show how many more books can be displayed.
-        updateRemaining: function() {
-            const remaining = matches.length - page * BOOKS_PER_PAGE
-            const button = document.querySelector("data-list-button")
-            button.innerText = `Show more (${remaining > 0 ? remaining : 0})`
-        }
-    },
-    settings: {
-        // This function will be used later to apply some settings, but right now it just logs a message to the console.
-        submit: function() {
-            console.log("Submitting settings...")
-        }
-    }
-}
 // Creating an empty space to store website elements (like buttons or images) before adding them to the page.
 let fragment = document.createDocumentFragment()
 
@@ -156,9 +138,15 @@ Then, the focus is set on the search input (dataSearchTitle.focus()), so the use
 dataHeaderSearch.addEventListener('click', () => {
     dataSearchOverlay.open = true
     dataSearchTitle.focus()
+
 })
 
 const dataSearchForm = document.querySelector('[data-search-form]')
+const dataSearchCancel = document.querySelector('[data-search-cancel]')
+
+dataSearchCancel.addEventListener('click', () => {
+    dataSearchOverlay.open = false
+}) 
 dataSearchForm.addEventListener('submit', (event) => {
     event.preventDefault()
 //Normally, submitting a form reloads the page. This prevents that, so our custom logic can run instead.
@@ -228,14 +216,18 @@ but only a certain number at a time (as many as BOOKS_PER_PAGE says). */
 //When the settings form is submitted, this updates the theme colors based on the user's selection and then closes the settings overlay.
     const dataSettingsForm = document.querySelector('[data-settings-form]')
     const dataSettingsOverlay = document.querySelector('[data-settings-overlay]')
-dataSettingsForm.addEventListener('submit', (event) => {
+    const dataHeaderSettings = document.querySelector('[data-header-settings]')
+    const dataSettingsCancel = document.querySelector('[data-settings-cancel]')
+    dataSettingsCancel.addEventListener('click', () => {
+        dataSettingsOverlay.open = false    
+    })   
+    dataHeaderSettings.addEventListener('click', (event) => {
+    dataSettingsOverlay.open = true    
     event.preventDefault()
-
     const formData = new FormData(event.target)
     const settings = Object.fromEntries(formData)
     document.documentElement.style.setProperty('--color-dark', css[settings].theme.dark)
     document.documentElement.style.setProperty('--color-light', css[settings].theme.light)
-    dataSettingsOverlay.open = false
 })
 
 
@@ -256,6 +248,10 @@ dataListItems.addEventListener('click', (event) => {
 
     const dataListActive = document.querySelector('[data-list-active]')
     dataListActive.open = true
+    const dataListClose = document.querySelector('[data-list-close]')
+    dataListClose.addEventListener('click', () => {
+        dataListActive.open = false
+    })
     const dataListBlur = document.querySelector('[data-list-blur]')
     dataListBlur.src = active.image
     const dataListImage = document.querySelector('[data-list-image]')
