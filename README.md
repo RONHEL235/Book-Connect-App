@@ -1,4 +1,4 @@
-# RONHEL235_FTO2306_GroupB_RoneeHelepi_IWA_Capstone
+Book-Connect-App
 Name: Ronee Helepi
 
 WELCOME TO BOOK CONNECT 
